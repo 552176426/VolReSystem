@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lhhh.mapper.SchoolMapper">
+    <select id="findSchoolsOrderByXyhRank" resultType="com.lhhh.bean.School">
+        select id,
+        name,
+        type,
+        nature,
+        f985,
+        f211,
+        dual_class,
+        school_type,
+        city,
+        xyh_rank,
+        badge_url
+        from school
+        where 1=1
+        <if test="chooseLocations!=null and chooseLocations.size!=0">
+            and province in
+            <foreach collection="chooseLocations" item="item" open="("
+                     separator="," close=")">#{item}
+            </foreach>
+        </if>
+        <if test="chooseSchoolTypes!=null and chooseSchoolTypes.size!=0">
+            and type in
+            <foreach collection="chooseSchoolTypes" item="item" open="("
+                     separator="," close=")">#{item}
+            </foreach>
+        </if>
+        <if test="chooseBanxueTypes!=null and chooseBanxueTypes.size!=0">
+            and school_type in
+            <foreach collection="chooseBanxueTypes" item="item" open="("
+                     separator="," close=")">#{item}
+            </foreach>
+        </if>
+        <if test="chooseSchoolLevels!=null and chooseSchoolLevels.size!=0">
+            and
+            <foreach collection="chooseSchoolLevels" index="index" item="item" open="("
+                     separator="or" close=")">
+                <if test="chooseSchoolLevels[index] == '985'">
+                    f985=1
+                </if>
+                <if test="chooseSchoolLevels[index] == '211'">
+                    f211=1
+                </if>
+                <if test="chooseSchoolLevels[index] == '双一流'">
+                    dual_class=38001 or dual_class=38000
+                </if>
+                <if test="chooseSchoolLevels[index] == '中央部委'">
+                    central=1
+                </if>
+                <if test="chooseSchoolLevels[index] == '教育部直属'">
+                    department=1
+                </if>
+                <if test="chooseSchoolLevels[index] == '强基计划'">
+                    admissions=1
+                </if>
+            </foreach>
+        </if>
+        order by xyh_rank is null, xyh_rank = 0, xyh_rank asc, id asc
+    </select>
+    <select id="findSchoolsCount" resultType="java.lang.Integer">
+        select count(*)
+        from school
+        where 1=1
+        <if test="chooseLocations!=null and chooseLocations.size!=0">
+            and province in
+            <foreach collection="chooseLocations" item="item" open="("
+                     separator="," close=")">#{item}
+            </foreach>
+        </if>
+        <if test="chooseSchoolTypes!=null and chooseSchoolTypes.size!=0">
+            and type in
+            <foreach collection="chooseSchoolTypes" item="item" open="("
+                     separator="," close=")">#{item}
+            </foreach>
+        </if>
+        <if test="chooseBanxueTypes!=null and chooseBanxueTypes.size!=0">
+            and school_type in
+            <foreach collection="chooseBanxueTypes" item="item" open="("
+                     separator="," close=")">#{item}
+            </foreach>
+        </if>
+        <if test="chooseSchoolLevels!=null and chooseSchoolLevels.size!=0">
+            and
+            <foreach collection="chooseSchoolLevels" index="index" item="item" open="("
+                     separator="or" close=")">
+                <if test="chooseSchoolLevels[index] == '985'">
+                    f985=1
+                </if>
+                <if test="chooseSchoolLevels[index] == '211'">
+                    f211=1
+                </if>
+                <if test="chooseSchoolLevels[index] == '双一流'">
+                    dual_class=38001 or dual_class=38000
+                </if>
+                <if test="chooseSchoolLevels[index] == '中央部委'">
+                    central=1
+                </if>
+                <if test="chooseSchoolLevels[index] == '教育部直属'">
+                    department=1
+                </if>
+                <if test="chooseSchoolLevels[index] == '强基计划'">
+                    admissions=1
+                </if>
+            </foreach>
+        </if>
+    </select>
+</mapper>

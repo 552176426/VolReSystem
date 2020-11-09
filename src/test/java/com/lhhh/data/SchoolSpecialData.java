@@ -1,5 +1,6 @@
 package com.lhhh.data;
 
+import com.alibaba.fastjson.JSONPath;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 import com.lhhh.utils.ReptileUtils;
@@ -11,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -109,7 +111,7 @@ public class SchoolSpecialData {
 
     @Test
     public void schoolSpecialToSql3(){
-        String sql = "select * from school_special where school_sp_id>=89849";
+        String sql = "select * from school_special";
         List<Map<String, Object>> items = jdbcTemplate.queryForList(sql);
         BufferedReader br = null;
         String content="";
@@ -143,6 +145,60 @@ public class SchoolSpecialData {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * 国家特色和省级特色专业
+     */
+    @Test
+    public void schoolSpecialToSql4(){
+        for (File file : new File("D:\\Downloads\\高校志愿推荐\\all").listFiles()) {
+            for (File listFile : file.listFiles()) {
+                if (listFile.getName().equals("pc_special.txt")){
+                    System.out.println(file.getName());
+                    String json = ReptileUtils.readJsonFile(listFile.getAbsolutePath());
+                    List<Map<String, String>> mapList = null;
+                    try {
+                        if (!JSONPath.read(json,"$.data.special_detail.1").equals("")){
+                            mapList = (List) JSONPath.read(json,"$.data.special_detail.1");
+                            System.out.println(mapList);
+                            ArrayList<Object[]> objects = new ArrayList<>();
+                            for (Map<String, String> stringStringMap : mapList) {
+                                String id = stringStringMap.get("id");
+                                String nation_feature = stringStringMap.get("nation_feature");
+                                String province_feature = stringStringMap.get("province_feature");
+                                System.out.println(id+":"+nation_feature+":"+province_feature);
+                                objects.add(new Object[]{nation_feature,province_feature,id});
+                            }
+                            String sql = "update school_special set nation_feature=?,province_feature=? where school_sp_id=?";
+                            jdbcTemplate.batchUpdate(sql,objects);
+                        }
+                        if (!JSONPath.read(json,"$.data.special_detail.2").equals("")){
+                            mapList = (List) JSONPath.read(json,"$.data.special_detail.2");
+                            System.out.println(mapList);
+                            ArrayList<Object[]> objects = new ArrayList<>();
+                            for (Map<String, String> stringStringMap : mapList) {
+                                String id = stringStringMap.get("id");
+                                String nation_feature = stringStringMap.get("nation_feature");
+                                String province_feature = stringStringMap.get("province_feature");
+                                System.out.println(id+":"+nation_feature+":"+province_feature);
+                                objects.add(new Object[]{nation_feature,province_feature,id});
+                            }
+                            String sql = "update school_special set nation_feature=?,province_feature=? where school_sp_id=?";
+                            jdbcTemplate.batchUpdate(sql,objects);
+                        }
+
+
+
+                    } catch (Exception e){
+
+                    }
+
+
+
+                }
+            }
+        }
     }
 
 }

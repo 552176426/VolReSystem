@@ -24,7 +24,7 @@ public class ProvinceScoreMapperTest {
 
     @Test
     public void findProvinceScoreByProId(){
-        List<ProvinceScore> scoreParagraphList = provinceScoreMapper.findProvinceScoreByProvinceName("北京");
+        List<ProvinceScore> scoreParagraphList = provinceScoreMapper.findProvinceScoreByProvinceNameAndYear("北京",2020);
         System.out.println(scoreParagraphList);
     }
 }

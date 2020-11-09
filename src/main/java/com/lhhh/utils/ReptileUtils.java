@@ -1,6 +1,8 @@
 package com.lhhh.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -45,6 +47,24 @@ public class ReptileUtils {
             }
         }
         return content;
+    }
+
+    public static String getContentFromPost(String postURL,NameValuePair[] data) {
+        String result=null;
+        try {
+            PostMethod postMethod = null;
+            postMethod = new PostMethod(postURL);
+            postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+            //参数设置，需要注意的就是里边不能传NULL，要传空字符串
+            postMethod.setRequestBody(data);
+            org.apache.commons.httpclient.HttpClient httpClient = new org.apache.commons.httpclient.HttpClient();
+            httpClient.executeMethod(postMethod); // 执行POST方法
+            result = postMethod.getResponseBodyAsString();
+            result = JSONObject.parse(result).toString();
+            return result;
+        } catch (Exception e) {
+        }
+        return result;
     }
 
     /**

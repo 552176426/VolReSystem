@@ -240,34 +240,37 @@ public class DicMapperTest {
                 List schoolList = JsonPath.read(json, "$.data.item[*]");
                 for (Object school : schoolList) {
                     String id = JsonPath.read(school, "$.school_id").toString();
-                    String name = JsonPath.read(school, "$.name").toString();
-                    String address = JsonPath.read(school, "$.address").toString();
-                    String code_enroll = JsonPath.read(school, "$.code_enroll").toString();
-                    String belong = JsonPath.read(school, "$.belong").toString();
-                    String province_id = JsonPath.read(school, "$.province_id").toString();
+//                    String name = JsonPath.read(school, "$.name").toString();
+//                    String address = JsonPath.read(school, "$.address").toString();
+//                    String code_enroll = JsonPath.read(school, "$.code_enroll").toString();
+//                    String belong = JsonPath.read(school, "$.belong").toString();
+//                    String province_id = JsonPath.read(school, "$.province_id").toString();
                     String city_id = JsonPath.read(school, "$.city_id").toString();
                     String county_id = JsonPath.read(school, "$.county_id").toString();
-                    String dual_class = JsonPath.read(school, "$.dual_class").toString();
-                    Integer f985 = Integer.parseInt(JsonPath.read(school, "$.f985").toString());
-                    Integer f211 = Integer.parseInt(JsonPath.read(school, "$.f211").toString());
-                    String nature = JsonPath.read(school, "$.nature").toString();
-                    String level = JsonPath.read(school, "$.level").toString();
-                    String type_id = JsonPath.read(school, "$.type").toString();
-                    String view_month = JsonPath.read(school, "$.view_month").toString();
-                    String view_week = JsonPath.read(school, "$.view_week").toString();
-                    String view_total = JsonPath.read(school, "$.view_total_number").toString();
-                    Integer central = Integer.parseInt(JsonPath.read(school, "$.central").toString());
-                    Integer department = Integer.parseInt(JsonPath.read(school, "$.department").toString());
-                    Integer admissions = Integer.parseInt(JsonPath.read(school, "$.admissions").toString());
+//                    String dual_class = JsonPath.read(school, "$.dual_class").toString();
+//                    Integer f985 = Integer.parseInt(JsonPath.read(school, "$.f985").toString());
+//                    Integer f211 = Integer.parseInt(JsonPath.read(school, "$.f211").toString());
+//                    String nature = JsonPath.read(school, "$.nature").toString();
+//                    String level = JsonPath.read(school, "$.level").toString();
+//                    String type_id = JsonPath.read(school, "$.type").toString();
+//                    String view_month = JsonPath.read(school, "$.view_month").toString();
+//                    String view_week = JsonPath.read(school, "$.view_week").toString();
+//                    String view_total = JsonPath.read(school, "$.view_total_number").toString();
+//                    Integer central = Integer.parseInt(JsonPath.read(school, "$.central").toString());
+//                    Integer department = Integer.parseInt(JsonPath.read(school, "$.department").toString());
+//                    Integer admissions = Integer.parseInt(JsonPath.read(school, "$.admissions").toString());
                     //replace会先判断是否有主键，有则删除
-                    String sql = "replace into school(id,name,address,code_enroll,belong," +
+                    /*String sql = "replace into school(id,name,address,code_enroll,belong," +
                             "province_id,city_id,county_id,dual_class,f985,f211,nature,level,type_id," +
-                            "view_month,view_week,view_total,central,department,admissions) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                            "view_month,view_week,view_total,central,department,admissions) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";*/
+
                     System.out.println(id);
-                    jdbcTemplate.update(sql, id, name, address,
+                    String sql = "update school set city_id=?,county_id=? where id= ?";
+                    jdbcTemplate.update(sql,city_id,county_id,id);
+                    /*jdbcTemplate.update(sql, id, name, address,
                             code_enroll, belong, province_id, city_id,
                             county_id, dual_class, f985, f211, nature,
-                            level, type_id, view_month, view_week, view_total, central, department, admissions);
+                            level, type_id, view_month, view_week, view_total, central, department, admissions);*/
 
                 }
                 br.close();

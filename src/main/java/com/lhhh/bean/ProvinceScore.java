@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class ProvinceScore {
     private Integer id;
-    private String province;
+    private String provinceName;
     private String batchName;
     private Integer year;
     private Integer score;

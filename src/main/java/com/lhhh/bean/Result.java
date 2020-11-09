@@ -1,5 +1,6 @@
 package com.lhhh.bean;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -9,7 +10,9 @@ import lombok.Data;
  * @version:1.0
  */
 @Data
+@AllArgsConstructor
 public class Result {
     private Integer code;
-    private Object Data;
+    private String msg;
+    private Object data;
 }

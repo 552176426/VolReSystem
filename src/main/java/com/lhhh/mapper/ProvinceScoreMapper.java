@@ -1,6 +1,7 @@
 package com.lhhh.mapper;
 
 import com.lhhh.bean.ProvinceScore;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +16,9 @@ import java.util.List;
 @Repository
 public interface ProvinceScoreMapper {
     @Select("select * from province_score")
-    public List<ProvinceScore> findProvinceScoreList();
-    @Select("select * from province_score where province_name = #{proName} order by year desc")
-    public List<ProvinceScore> findProvinceScoreByProvinceName(String proName);
+    List<ProvinceScore> findProvinceScoreList();
+    @Select("select * from province_score where province_name = #{proName} and year=#{year}")
+    List<ProvinceScore> findProvinceScoreByProvinceNameAndYear(@Param("proName") String proName,@Param("year") Integer year);
+    @Select("select distinct province_name from province_score")
+    List<String> getAllProvince();
 }

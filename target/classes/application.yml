@@ -1,16 +1,22 @@
-
-#数据库配置
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/volresystem?serverTimezone=Asia/Shanghai&characterEncoding=utf-8
     username: root
     password: 123456
-  profiles:
-    active: dev
 
-#sql日志
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+server:
+  port: 8888
+
+# pagehelper
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
 

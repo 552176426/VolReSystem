@@ -1,6 +1,5 @@
 package com.lhhh.data;
 
-import com.lhhh.utils.OfficeUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.File;
-import java.util.List;
+import java.io.*;
 
 /**
  * @author: lhhh
@@ -25,29 +23,44 @@ public class ScoreParagraph {
 
     @Test
     public void scoreParagraphToSql(){
-        File file = new File("D:\\Downloads\\高校志愿推荐\\2020一分一段表");
-        File[] files = file.listFiles();
-        for (File file1 : files) {
-            File[] files1 = file1.listFiles();
-            for (File file2 : files1) {
-                String s = file2.getName().split(".csv")[0];
-                String[] split = s.split("-");
-                String province = split[0];
-                String type = split[1];
-                System.out.println("----------"+province+":"+type+"----------");
-                String csv = file2.getAbsolutePath();
-                List<String> strings = OfficeUtils.readCsv(csv);
-                System.out.println(strings.get(0));
-                String sql = "insert into score_paragraph(province,year,type,score,number) values(?,?,?,?,?)";
-                for (int i = 1; i < strings.size(); i++) {
-                    String line = strings.get(i);
-                    String[] split1 = line.split(",");
-                    String score = split1[0];
-                    String number = split1[1];
-                    jdbcTemplate.update(sql,province,2020,type,score,number);
+        File file = new File("D:\\Downloads\\高校志愿推荐\\近三年一分一段表");
+        for (File listFile : file.listFiles()) {
+            String province = listFile.getName();
+            for (File f : listFile.listFiles()) {
+                String[] strings = f.getName().split("-");
+                Integer year = Integer.valueOf(strings[0]);
+                String type = strings[1].split(".txt")[0];
+                try {
+                    BufferedReader br = new BufferedReader(new FileReader(f));
+                    String s;
+                    int i = 1;
+                    int score=-1;
+                    int score_number=-1;
+                    int number=-1;
+                    while ((s=br.readLine())!=null){
+                        if (i%3==1){
+                            score = Integer.valueOf(s);
+                        } else if (i%3==2){
+                            score_number = Integer.valueOf(s);
+                        } else if (i%3==0){
+                            number=Integer.valueOf(s);
+                            String sql = "insert into score_paragraph(province,year,type,score,score_number,number) values(?,?,?,?,?,?)";
+                            jdbcTemplate.update(sql,province,year,type,score,score_number,number);
+                            System.out.println(province+":"+year+":"+type+":"+score+":"+score_number+":"+number);
+                        }
+                        i++;
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+
             }
         }
+
+
+
     }
 
 

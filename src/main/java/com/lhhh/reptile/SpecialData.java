@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 public class SpecialData {
     public static void main(String[] args) {
-        downLoad2();
+        downLoad3();
     }
     public static void downLoad1(){
         //75页
@@ -60,6 +60,19 @@ public class SpecialData {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * 近五年薪酬
+     */
+    public static void downLoad3(){
+        for (int i = 670; i < 2000; i++) {
+            System.out.print(i+"读取中...");
+            String content = ReptileUtils.getContent("https://gaokao.baidu.com/gaokao/gkmajor/majorlist?ajax=1&degreeName=&subjectCategory=&subjectName=&sort_key=&pn="+i+"&rn=10&selectlist=0");
+            System.out.print("读取完毕...写入中...");
+            ReptileUtils.downLoad(content,"D:\\Downloads\\高校志愿推荐\\百度高考数据\\专业近五年薪酬\\"+i+".txt");
+            System.out.println("已写入！");
         }
     }
 }
