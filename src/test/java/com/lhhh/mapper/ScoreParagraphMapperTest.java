@@ -1,13 +1,10 @@
 package com.lhhh.mapper;
 
-import com.lhhh.bean.ScoreParagraph;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.List;
 
 /**
  * @author: lhhh
@@ -24,7 +21,6 @@ public class ScoreParagraphMapperTest {
 
     @Test
     public void findScoreParagraphList(){
-        List<ScoreParagraph> scoreParagraphList = scoreParagraphMapper.findScoreParagraphList();
-        System.out.println(scoreParagraphList);
+
     }
 }

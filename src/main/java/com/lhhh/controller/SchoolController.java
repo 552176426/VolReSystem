@@ -28,7 +28,7 @@ public class SchoolController {
     @Autowired
     private SchoolService schoolService;
 
-    /*@GetMapping("/findSchools")
+    /*@GetMapping("/findSchoolsAdmission")
     @ResponseBody
     public Result findSchoolsOrderByXyhRank(@RequestParam Integer page,@RequestParam Integer pageCount){
         List<School> schoolList = schoolService.findSchoolsOrderByXyhRank(page,pageCount);

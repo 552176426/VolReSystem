@@ -10,9 +10,11 @@ import lombok.Data;
  */
 @Data
 public class ScoreParagraph {
+    private Integer id;
     private String province;
     private int year;
     private String type;
     private int score;
+    private int scoreNumber;
     private int number;
 }

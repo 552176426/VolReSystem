@@ -16,10 +16,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 /**
  * @author: lhhh
@@ -1132,15 +1134,17 @@ public class MyTest {
 
     @Test
     public void test1() {
-        File file = new File("D:\\Downloads\\高校志愿推荐\\百度高考数据\\school_major\\pn_" + 1 + "a.txt");
-        if (!file.exists()) {
-            try {
-                file.mkdir();
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        int[] ids = {102, 99, 42, 31, 140, 104, 123, 114, 934, 125, 111, 60, 126, 44, 73, 48, 62, 118, 119, 51, 132, 499, 391, 36, 127, 105, 122, 61, 504, 109, 128, 138, 509, 232, 661, 86, 108, 46, 330, 71, 76, 134, 59, 143, 101, 554, 459, 106, 414, 97, 284, 34, 130, 52, 460, 310, 131, 537, 342, 1073, 107, 173, 81, 463, 540, 33, 63, 57, 566, 293, 47, 88, 82, 507, 187, 37, 178, 265, 133, 116, 535, 35, 332, 471, 558, 307, 85, 464, 420, 139, 112, 180, 490, 528, 79, 184, 77, 245, 555, 67, 389, 38, 135, 622, 84, 220, 311, 120, 80, 428, 385, 30, 831, 1018, 164, 263, 115, 53, 334, 286, 352, 50, 218, 41, 175, 229, 542, 144, 268, 557, 124, 569, 547, 157, 466, 349, 510, 179, 277, 1249, 142, 426, 54, 496, 494, 1061, 491, 1007, 39, 434, 393, 597, 96, 103, 458, 313, 199, 160, 388, 433, 935, 231, 177, 270, 165, 335, 242, 121, 110, 58, 575, 534, 320, 526, 98, 78, 247, 604, 361, 302, 354, 833, 151, 358, 351, 431, 423, 787, 100, 159, 55, 69, 243, 398, 45, 375, 602, 170, 171, 373, 421, 356, 129, 473, 275, 117, 174, 136, 68, 533, 939, 875, 532, 308, 176, 429, 465, 217, 323, 376, 488, 273, 49, 589, 481, 113, 227, 576, 43, 479, 264, 363, 56, 381, 210, 417, 599, 163, 374, 230, 193, 262, 1178, 290, 166, 146, 430, 66, 607, 240, 556, 287, 1009, 596, 271, 1323, 257, 552, 309, 87, 209, 1142, 425, 288, 213, 1010, 462, 401, 318, 214, 1219, 419, 483, 216, 278, 584, 445, 960, 252, 317, 266, 412, 511, 1066, 1062, 655, 2054, 91, 484, 161, 1265, 1031, 357, 241, 169, 444, 32, 595, 379, 312, 480, 315, 505, 531, 211, 274, 570, 2498, 396, 553, 853, 606, 208, 551, 876, 1336};
+        List<Integer> collect = Arrays.stream(ids).boxed().collect(Collectors.toList());
+
+        long l1 = System.currentTimeMillis();
+        collect.parallelStream().forEach(id->{
+//            String content = ReptileUtils.getContent("https://static-data.eol.cn/www/2.0/school/" + id + "/info.json");
+            System.out.println(Thread.currentThread().getName());
+
+        });
+
+
 
     }
 

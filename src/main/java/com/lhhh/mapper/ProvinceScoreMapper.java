@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: lhhh
@@ -21,4 +22,7 @@ public interface ProvinceScoreMapper {
     List<ProvinceScore> findProvinceScoreByProvinceNameAndYear(@Param("proName") String proName,@Param("year") Integer year);
     @Select("select distinct province_name from province_score")
     List<String> getAllProvince();
+
+    @Select("select score from province_score where province_name = #{provinceName} and batch_name=#{batchName} and year=#{year} and type=#{curriculum}")
+    Integer findProvinceScore(Map<String,Object> map);
 }

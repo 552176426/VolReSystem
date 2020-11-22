@@ -22,4 +22,6 @@ public interface SchoolMapper {
     List<School> findSchoolsOrderByXyhRank(@Param("chooseLocations") List<String> chooseLocations, @Param("chooseSchoolTypes") List<String> chooseSchoolTypes, @Param("chooseBanxueTypes") List<String> chooseBanxueTypes, @Param("chooseSchoolLevels") List<String> chooseSchoolLevels);
 
     Integer findSchoolsCount(@Param("chooseLocations") List<String> chooseLocations, @Param("chooseSchoolTypes") List<String> chooseSchoolTypes, @Param("chooseBanxueTypes") List<String> chooseBanxueTypes, @Param("chooseSchoolLevels") List<String> chooseSchoolLevels);
+
+
 }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lhhh.mapper.RecommendMapper">
+    <select id="findSchoolsAdmission" resultType="java.util.Map">
+        SELECT
+        s.id,
+        sss.school_name,
+        s.province,
+        SUBSTR(s.city,1,2) city,
+        s.type,
+        case when s.nature=36000 then '公办'
+        when s.nature = 36001 then '民办'
+        when s.nature = 36002 then '中外合作'
+        else '其他'
+        end nature,
+        case when s.school_type=6000 then '本科'
+        when s.school_type=6001 then '专科'
+        else '其他' end school_type,
+        s.f985,
+        s.f211,
+        s.dual_class,
+        ss.year,
+        ss.min_score,
+        ss.min_cha,
+        ss.min_score_order,
+        s.badge_url
+        from school_score_selector as sss
+        left join school_score as ss on sss.id = ss.sss_id
+        LEFT JOIN school AS s ON s.NAME = sss.school_name
+        where sss.province_name = #{provinceName}
+        and curriculum = #{curriculum}
+        and sss.batch_name = #{batchName}
+        and year in
+        <foreach collection="yearList" item="item" open="("
+                 separator="," close=")">#{item}
+        </foreach>
+        and (min_score IS NOT NULL AND min_score_order IS NOT NULL AND min_cha IS NOT NULL)
+    </select>
+</mapper>

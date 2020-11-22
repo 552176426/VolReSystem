@@ -1,7 +1,7 @@
 package com.lhhh.bean;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author: lhhh
@@ -11,8 +11,9 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class Result {
+@NoArgsConstructor
+public class Result<T> {
     private Integer code;
     private String msg;
-    private Object data;
+    private T data;
 }
