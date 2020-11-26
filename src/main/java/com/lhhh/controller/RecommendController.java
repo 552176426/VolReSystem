@@ -41,6 +41,20 @@ public class RecommendController {
         }
     }
 
+    @GetMapping("/findBatch")
+    @ResponseBody
+    public Result findBatch(@RequestParam Map<String,Object> paramsMap){
+
+        log.info("====>paramsMap:{}",paramsMap);
+        try {
+            String batch = recommendService.findBatch(paramsMap);
+            return new Result(200, Msg.GET__BATCH_NAME_SUCCESS,batch);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new Result(500,Msg.GET__BATCH_NAME_FAIL,null);
+        }
+    }
+
     @GetMapping("/findSpecials")
     @ResponseBody
     public Result findSpecials(@RequestParam Map<String,Object> paramsMap){

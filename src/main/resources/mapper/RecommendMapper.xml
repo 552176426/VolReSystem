@@ -34,6 +34,59 @@
         <foreach collection="yearList" item="item" open="("
                  separator="," close=")">#{item}
         </foreach>
+        <if test="chooseLocations!=null and chooseLocations.size!=0">
+            and province in
+            <foreach collection="chooseLocations" item="item" open="("
+                     separator="," close=")">#{item}
+            </foreach>
+        </if>
+        <if test="chooseSchoolTypes!=null and chooseSchoolTypes.size!=0">
+            and type in
+            <foreach collection="chooseSchoolTypes" item="item" open="("
+                     separator="," close=")">#{item}
+            </foreach>
+        </if>
+        <if test="chooseBanxueTypes!=null and chooseBanxueTypes.size!=0">
+            and school_type in
+            <foreach collection="chooseBanxueTypes" item="item" open="("
+                     separator="," close=")">#{item}
+            </foreach>
+        </if>
+        <if test="chooseSchoolLevels!=null and chooseSchoolLevels.size!=0">
+            and
+            <foreach collection="chooseSchoolLevels" index="index" item="item" open="("
+                     separator="or" close=")">
+                <if test="chooseSchoolLevels[index] == '985'">
+                    f985=1
+                </if>
+                <if test="chooseSchoolLevels[index] == '211'">
+                    f211=1
+                </if>
+                <if test="chooseSchoolLevels[index] == '双一流'">
+                    dual_class=38001 or dual_class=38000
+                </if>
+            </foreach>
+        </if>
         and (min_score IS NOT NULL AND min_score_order IS NOT NULL AND min_cha IS NOT NULL)
+    </select>
+    <select id="findSchoolAdmission" resultType="java.util.Map">
+        SELECT
+            sss.school_name,
+            ss.year,
+            case when ss.min_score is null then '--'
+                 else ss.min_score end min_score,
+            case when ss.min_cha is null then '--'
+                 else ss.min_cha end min_cha,
+            case when ss.min_score_order is null then '--'
+                 else ss.min_score_order end min_score_order
+        FROM
+            school_score_selector AS sss
+                LEFT JOIN school_score AS ss ON sss.id = ss.sss_id
+        WHERE
+            sss.province_name = #{provinceName}
+          AND curriculum = #{curriculum}
+          AND sss.batch_name = #{batchName}
+          AND school_name=#{schoolName}
+        ORDER BY ss.year desc
     </select>
 </mapper>

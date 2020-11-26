@@ -11,4 +11,5 @@ import java.util.Map;
 public interface RecommendService {
     Map<String,Object> findSchools(Map<String, Object> map) throws Exception;
     Map<String,Object> findSpecials(Map<String, Object> map) throws Exception;
+    public String findBatch(Map paramsMap) throws  Exception;
 }

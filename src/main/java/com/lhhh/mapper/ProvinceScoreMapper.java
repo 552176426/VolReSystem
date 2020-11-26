@@ -25,4 +25,6 @@ public interface ProvinceScoreMapper {
 
     @Select("select score from province_score where province_name = #{provinceName} and batch_name=#{batchName} and year=#{year} and type=#{curriculum}")
     Integer findProvinceScore(Map<String,Object> map);
+
+    List<Integer> findProvinceScores(Map<String,Object> map);
 }

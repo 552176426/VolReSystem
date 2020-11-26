@@ -16,8 +16,8 @@ public interface RecommendMapper {
 
     /**
      * @param map
-     * map: provinceName(招生省份)、curriculum(文理科)、batchName(批次)、yearList(年份)
      * @return
      */
     List<Map<String,Object>> findSchoolsAdmission(Map<String, Object> map);
+    List<Map<String,Object>> findSchoolAdmission(Map<String, Object> map);
 }
