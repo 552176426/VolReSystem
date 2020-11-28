@@ -69,15 +69,15 @@ public class RecommendServiceImpl implements RecommendService {
         }
         List<String> chooseSchoolLevels = null;
         if (paramsMap.get("chooseSchoolLevels") != null) {
-            chooseSchoolLevels = (List<String>) JSON.parse(paramsMap.get("chooseLocations").toString());
+            chooseSchoolLevels = (List<String>) JSON.parse(paramsMap.get("chooseSchoolLevels").toString());
         }
         List<String> chooseSchoolTypes = null;
         if (paramsMap.get("chooseSchoolTypes") != null) {
-            chooseSchoolTypes = (List<String>) JSON.parse(paramsMap.get("chooseLocations").toString());
+            chooseSchoolTypes = (List<String>) JSON.parse(paramsMap.get("chooseSchoolTypes").toString());
         }
         List<String> chooseBanxueTypes = null;
         if (paramsMap.get("chooseBanxueTypes") != null) {
-            chooseBanxueTypes = (List<String>) JSON.parse(paramsMap.get("chooseLocations").toString());
+            chooseBanxueTypes = (List<String>) JSON.parse(paramsMap.get("chooseBanxueTypes").toString());
         }
 
         if (chooseSchoolTypes != null && chooseSchoolTypes.size() != 0) {
@@ -97,6 +97,7 @@ public class RecommendServiceImpl implements RecommendService {
         paramsMap.put("chooseBanxueTypes", chooseBanxueTypes);
         paramsMap.put("chooseLocations", chooseLocations);
         paramsMap.put("chooseSchoolLevels", chooseSchoolLevels);
+
         //过去三年录取数据
         List<Map<String, Object>> schoolList = recommendMapper.findSchoolsAdmission(paramsMap);
         //按校名分组
@@ -104,7 +105,7 @@ public class RecommendServiceImpl implements RecommendService {
 
         //获取排名信息
         Integer scoreOrder;
-        if (StringUtils.isEmpty(paramsMap.get("scoreOrder"))) {
+        if (StringUtils.isEmpty(paramsMap.get("scoreOrder"))||paramsMap.get("scoreOrder").toString().equals("null")||paramsMap.get("scoreOrder").toString().equals("undefined")) {
             Map<String, Object> findOrderMap = new HashMap<>();
             findOrderMap.put("score", paramsMap.get("score"));
             findOrderMap.put("provinceName", paramsMap.get("provinceName"));
@@ -122,6 +123,9 @@ public class RecommendServiceImpl implements RecommendService {
         } else {
             paramsMap.put("method", "score");
         }
+
+        System.out.println(paramsMap);
+
         return findSchool(mapSchoolList, paramsMap);
     }
 

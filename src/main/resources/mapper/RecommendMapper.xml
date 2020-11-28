@@ -47,7 +47,7 @@
             </foreach>
         </if>
         <if test="chooseBanxueTypes!=null and chooseBanxueTypes.size!=0">
-            and school_type in
+            and nature in
             <foreach collection="chooseBanxueTypes" item="item" open="("
                      separator="," close=")">#{item}
             </foreach>

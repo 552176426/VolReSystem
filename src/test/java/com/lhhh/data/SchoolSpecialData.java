@@ -8,6 +8,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -199,6 +201,70 @@ public class SchoolSpecialData {
                 }
             }
         }
+    }
+
+    @Test
+    public void update_SSSS_special_name(){
+        String sql = "SELECT\n" +
+                "\tsss.id,\n" +
+                "\tschool_name,\n" +
+                "\tprovince_name,\n" +
+                "\tcurriculum,\n" +
+                "\tyear,\n" +
+                "\tspecial_name,\n" +
+                "\tbatch_name,\n" +
+                "\tmin,\n" +
+                "\tmax,\n" +
+                "\taverage,\n" +
+                "\tmin_order\n" +
+                "FROM\n" +
+                "\tschool_special_score_selector ssss \n" +
+                "\tright JOIN school_special_score sss on ssss.id=sss.sms_id\n" +
+                "WHERE\n" +
+                "   year=2019 and\n" +
+                "-- \tand min is not null and min_order is not null\n" +
+                "\tsss.special_name like \"%...%\"\n" +
+                "\torder BY id";
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
+        int count1 = 0;
+        int count2 = 0;
+        int count = 0;
+        int count3 = 0;
+        for (Map<String, Object> map : maps) {
+            String special_name = map.get("special_name").toString().substring(0, 12);
+            String school_name = map.get("school_name").toString();
+            String province_name = map.get("province_name").toString();
+            String curriculum = map.get("curriculum").toString();
+            int id = Integer.parseInt(map.get("id").toString());
+
+            String sql1 = "SELECT special_name FROM school_special_score_selector ssss RIGHT JOIN school_special_score sss ON ssss.id = sss.sms_id  WHERE"+
+                    " YEAR =2017 " +
+                    " AND school_name = "+  "'"+ school_name+ "'"+
+                    " AND province_name = "+"'"+province_name+"'" +
+                    " AND curriculum = "+"'"+curriculum+" '" +
+                    " and special_name like '%"+special_name+"%'";
+            try {
+                String speName = jdbcTemplate.queryForObject(sql1, String.class);
+                if (speName.substring(speName.length()-1,speName.length()).equals("）")){
+                    String sql2 = "update school_special_score set special_name="+"'"+speName+"'"+"where id = "+id;
+//                jdbcTemplate.update(sql2);
+                    count++;
+
+                } else {
+                    System.out.println(special_name+":"+speName);
+                    count3++;
+                }
+            } catch (EmptyResultDataAccessException e){
+                count1++;
+            } catch (IncorrectResultSizeDataAccessException i){
+                count2++;
+            }
+        }
+        System.out.println("empty:"+count1);
+        System.out.println("more:"+count2);
+        System.out.println("right:"+count);
+        System.out.println("other:"+count3);
+
     }
 
 }
