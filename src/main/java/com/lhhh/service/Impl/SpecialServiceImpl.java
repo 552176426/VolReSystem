@@ -5,6 +5,7 @@ import com.lhhh.mapper.SpecialMapper;
 import com.lhhh.service.SpecialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -74,35 +75,49 @@ public class SpecialServiceImpl implements SpecialService {
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> special = specialMapper.findSpecialById(id);
 
-        String sel_adv = special.get("sel_adv").toString();
-        if (sel_adv.equals("") || sel_adv == null) {
-            sel_adv = "不限";
-            special.put("sel_dev", sel_adv);
+        if (StringUtils.isEmpty(special.get("sel_adv"))){
+            special.put("sel_dev", "不限");
         }
 
         //男女比例
-        String rate = special.get("rate").toString();
-        System.out.println(rate);
-        String[] split = rate.split(":");
-        System.out.println(Arrays.toString(split));
-        String rateStr = "";
-        rateStr += ((int) Double.parseDouble(split[0]) + ":" + (int) Double.parseDouble(split[1]));
-        special.put("rate", rateStr);
+        if(StringUtils.isEmpty(special.get("rate"))){
+            special.put("rate"," ");
+        } else {
+            String rate = special.get("rate").toString();
+            System.out.println(rate);
+            String[] split = rate.split(":");
+            System.out.println(Arrays.toString(split));
+            String rateStr = "";
+            rateStr += ((int) Double.parseDouble(split[0]) + ":" + (int) Double.parseDouble(split[1]));
+            special.put("rate", rateStr);
+        }
+
 
         //就业率
         List<Map<String, Object>> specialJobRate = specialMapper.findSpecialJobRate(id);
-        Map<String, Object> map = specialJobRate.get(specialJobRate.size() - 1);
-        String jobrate = map.get("rate").toString();
-        String jobrate_1 = jobrate.split("-")[0];
-        String jobrate_2 = jobrate.split("-")[1];
-        jobrate_1 = jobrate_1.substring(0, jobrate_1.length() - 1);
-        jobrate_2 = jobrate_2.substring(0, jobrate_2.length() - 1);
-        special.put("jobrate_1", jobrate_1);
-        special.put("jobrate_2", jobrate_2);
+        if (specialJobRate.size()!=0){
+            Map<String, Object> map = specialJobRate.get(specialJobRate.size() - 1);
+            String jobrate = map.get("rate").toString();
+            String jobrate_1 = jobrate.split("-")[0];
+            String jobrate_2 = jobrate.split("-")[1];
+            jobrate_1 = jobrate_1.substring(0, jobrate_1.length() - 1);
+            jobrate_2 = jobrate_2.substring(0, jobrate_2.length() - 1);
+            special.put("jobrate_1", jobrate_1);
+            special.put("jobrate_2", jobrate_2);
+        } else {
+            special.put("jobrate_1", "-- ");
+            special.put("jobrate_2", " --");
+        }
+
 
         //专业排名
         Integer salaryRank = specialMapper.findSpecialSalaryRank(id);
-        special.put("salaryRank", salaryRank);
+        if (StringUtils.isEmpty(salaryRank)){
+            special.put("salaryRank", "--");
+        }else {
+            special.put("salaryRank", salaryRank);
+        }
+
 
         //相似专业
         int level3 = Integer.parseInt(special.get("level3").toString());
@@ -110,21 +125,30 @@ public class SpecialServiceImpl implements SpecialService {
         result.put("similarSpecial", similarSpecial);
 
         //课程
-        String content = special.get("learn_what").toString();
-        Pattern pattern = Pattern.compile("《(.*?)》");
-        Matcher matcher = pattern.matcher(content);
-        List<String> learns = new ArrayList<String>();
-        while (matcher.find()) {
-            String tag = matcher.group(1);
-            learns.add(tag);
+        if (!StringUtils.isEmpty(special.get("learn_what"))){
+            String content = special.get("learn_what").toString();
+            Pattern pattern = Pattern.compile("《(.*?)》");
+            Matcher matcher = pattern.matcher(content);
+            List<String> learns = new ArrayList<String>();
+            while (matcher.find()) {
+                String tag = matcher.group(1);
+                learns.add(tag);
+            }
+            special.put("learns", learns);
+        } else {
+            special.put("learns", null);
         }
-        special.put("learns", learns);
 
 
         result.put("baseInfo", special);
 
         List<Map<String, Object>> specialImpress = specialMapper.findSpecialImpress(id);
-        result.put("impress", specialImpress);
+        if (specialImpress.size()!=0){
+            result.put("impress", specialImpress);
+        }else {
+            result.put("impress", null);
+        }
+
 
         //近十年薪酬
         Map<String, Object> salary = specialMapper.find10YearsSalary(id);
