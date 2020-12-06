@@ -19,6 +19,11 @@ public class Msg {
     public static final String GET_RECOMMEND_SPECIAL_DATA_SUCCESS = "获取推荐学校成功";
     public static final String GET_RECOMMEND_SPECIAL_DATA_FAIL = "获取推荐学校失败";
     public static final String GET__SPECIAL_DATA_SUCCESS = "获取专业信息成功";
+    public static final String GET__SPECIAL_DETAIL_DATA_SUCCESS = "获取专业详细信息成功";
+    public static final String GET__SPECIAL_DETAIL_DATA_FAIL = "获取专业详细信息失败";
+
+    public static final String GET__SPECIAL_SCHOOL_DATA_SUCCESS = "获取专业学校信息成功";
+    public static final String GET__SPECIAL_SCHOOL_DATA_FAIL = "获取专业学校信息失败";
 
     public static final String GET__BATCH_NAME_SUCCESS = "获取推荐批次成功";
     public static final String GET__BATCH_NAME_FAIL = "获取推荐批次失败";

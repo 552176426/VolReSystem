@@ -1,13 +1,14 @@
 package com.lhhh.service.Impl;
 
+import com.github.pagehelper.PageHelper;
 import com.lhhh.mapper.SpecialMapper;
 import com.lhhh.service.SpecialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -63,8 +64,109 @@ public class SpecialServiceImpl implements SpecialService {
         });
 
         Map result = new HashMap();
-        result.put("1",result1);
-        result.put("2",result2);
+        result.put("1", result1);
+        result.put("2", result2);
         return result;
     }
+
+    @Override
+    public Map findSpecialOne(Integer id) {
+        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> special = specialMapper.findSpecialById(id);
+
+        String sel_adv = special.get("sel_adv").toString();
+        if (sel_adv.equals("") || sel_adv == null) {
+            sel_adv = "不限";
+            special.put("sel_dev", sel_adv);
+        }
+
+        //男女比例
+        String rate = special.get("rate").toString();
+        System.out.println(rate);
+        String[] split = rate.split(":");
+        System.out.println(Arrays.toString(split));
+        String rateStr = "";
+        rateStr += ((int) Double.parseDouble(split[0]) + ":" + (int) Double.parseDouble(split[1]));
+        special.put("rate", rateStr);
+
+        //就业率
+        List<Map<String, Object>> specialJobRate = specialMapper.findSpecialJobRate(id);
+        Map<String, Object> map = specialJobRate.get(specialJobRate.size() - 1);
+        String jobrate = map.get("rate").toString();
+        String jobrate_1 = jobrate.split("-")[0];
+        String jobrate_2 = jobrate.split("-")[1];
+        jobrate_1 = jobrate_1.substring(0, jobrate_1.length() - 1);
+        jobrate_2 = jobrate_2.substring(0, jobrate_2.length() - 1);
+        special.put("jobrate_1", jobrate_1);
+        special.put("jobrate_2", jobrate_2);
+
+        //专业排名
+        Integer salaryRank = specialMapper.findSpecialSalaryRank(id);
+        special.put("salaryRank", salaryRank);
+
+        //相似专业
+        int level3 = Integer.parseInt(special.get("level3").toString());
+        List<Map<String, Object>> similarSpecial = specialMapper.findSimilarSpecial(level3, id);
+        result.put("similarSpecial", similarSpecial);
+
+        //课程
+        String content = special.get("learn_what").toString();
+        Pattern pattern = Pattern.compile("《(.*?)》");
+        Matcher matcher = pattern.matcher(content);
+        List<String> learns = new ArrayList<String>();
+        while (matcher.find()) {
+            String tag = matcher.group(1);
+            learns.add(tag);
+        }
+        special.put("learns", learns);
+
+
+        result.put("baseInfo", special);
+
+        List<Map<String, Object>> specialImpress = specialMapper.findSpecialImpress(id);
+        result.put("impress", specialImpress);
+
+        //近十年薪酬
+        Map<String, Object> salary = specialMapper.find10YearsSalary(id);
+        result.put("salary", salary);
+
+        //就业行业，地区，岗位
+        List<Map<String, Object>> jobDetail = specialMapper.findSpecialJobDetail(id);
+        Map<Object, List<Map<String, Object>>> type = jobDetail.stream().collect(Collectors.groupingBy(i -> i.get("type")));
+        Map<String, List<Map<String, Object>>> jobDetailMap = new HashMap<>();
+        if (type.get(1) != null) {
+            List<Map<String, Object>> type1 = type.get(1).stream().map(i -> {
+                double r = Double.parseDouble(i.get("rate").toString());
+                String rStr = String.format("%.1f", r);
+                i.put("rate", rStr);
+                return i;
+            }).sorted(Comparator.comparing((Map<String, Object> h) -> (Double.parseDouble( h.get("rate").toString()))).reversed())
+                    .collect(Collectors.toList());
+            jobDetailMap.put("type1", type1);
+        } else if (type.get(2) != null) {
+            List<Map<String, Object>> type2 = type.get(2).stream()
+                    .sorted(Comparator.comparing((Map<String, Object> h) -> ((Double) h.get("rate"))).reversed())
+                    .collect(Collectors.toList());
+            jobDetailMap.put("type2", type2);
+        } else if (type.get(3) != null) {
+            List<Map<String, Object>> type3 = type.get(3).stream()
+                    .sorted(Comparator.comparing((Map<String, Object> h) -> ((Double) h.get("rate"))).reversed())
+                    .collect(Collectors.toList());
+            jobDetailMap.put("type3", type3);
+        }
+        System.out.println(jobDetailMap);
+        result.put("jobDetail", jobDetailMap);
+        return result;
+    }
+
+    @Override
+    public List<Map<String, Object>> findSchoolBySpId(Map map) {
+        int page = Integer.parseInt(map.get("page").toString());
+        int pageCount = Integer.parseInt(map.get("pageCount").toString());
+        PageHelper.startPage(page, pageCount);
+        return specialMapper.findSchoolBySpId(Integer.parseInt(map.get("id").toString()));
+
+    }
+
+
 }

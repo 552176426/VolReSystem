@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lhhh.mapper.SpecialMapper">
+    <select id="findSchoolBySpId" resultType="java.util.Map">
+        select school_id,
+               school_name,
+               province,
+               case when nature = 36000 then '公办' when nature = 36001 then '民办' else '' end nature,
+               f985,
+               f211,
+               case when dual_class = 38001 or dual_class = 38000 then '双一流' else '' end    dual_class,
+               eol_rank,badge_url
+        from school_special ss
+                 left join school s on ss.school_id = s.id
+        where special_id = #{id}
+        ORDER BY eol_rank
+    </select>
+</mapper>

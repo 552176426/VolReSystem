@@ -1,5 +1,6 @@
 package com.lhhh.service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,4 +11,6 @@ import java.util.Map;
  */
 public interface SpecialService {
     Map findSpecials();
+    Map findSpecialOne(Integer id);
+    List<Map<String, Object>> findSchoolBySpId(Map map);
 }
