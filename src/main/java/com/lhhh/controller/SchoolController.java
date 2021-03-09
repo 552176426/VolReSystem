@@ -7,10 +7,7 @@ import com.lhhh.service.SchoolService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -49,6 +46,42 @@ public class SchoolController {
         log.info("paramsMap: {}",paramsMap);
         Integer schoolsCount = schoolService.findSchoolsCount(paramsMap);
         return new Result(200,Msg.GET_SCHOOL_DATA_SUCCESS, schoolsCount);
+    }
+
+    @GetMapping("/findSchool")
+    @ResponseBody
+    public Result findSchool(@RequestParam Integer id){
+        try {
+            Map<String, Object> school = schoolService.findOne(id);
+            return new Result(200,Msg.GET_SCHOOL_DATA_SUCCESS, school);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new Result(500,Msg.GET_SCHOOL_DATA_FAIL, null);
+        }
+    }
+
+    @GetMapping("/findMinScore")
+    @ResponseBody
+    public Result findMinScore(@RequestParam Map map){
+        try {
+            Map minScore = schoolService.findMinScore(map);
+            return new Result(200,Msg.GET_SCHOOL_MINSCORE_SUCCESS, minScore);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new Result(500,Msg.GET_SCHOOL_MINSCORE_FAIL, null);
+        }
+    }
+
+    @GetMapping("/findSchoolScore")
+    @ResponseBody
+    public Result findSchoolScore(@RequestParam Map map){
+        try {
+            List<Map> schoolScore = schoolService.findSchoolScore(map);
+            return new Result(200,Msg.GET_SCHOOL_SCORE_SUCCESS, schoolScore);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new Result(500,Msg.GET_SCHOOL_SCORE_FAIL, null);
+        }
     }
 
 }

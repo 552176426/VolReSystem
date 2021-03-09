@@ -13,4 +13,5 @@ import java.util.List;
 public interface ProvinceScoreService {
     List<ProvinceScore> findProvinceScoreByProvinceNameAndYear(String provinceName,Integer year);
     List<String> getAllProvince();
+    public static final int a = 3;
 }

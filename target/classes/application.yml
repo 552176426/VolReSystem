@@ -4,6 +4,19 @@ spring:
     url: jdbc:mysql://localhost:3306/volresystem?serverTimezone=Asia/Shanghai&characterEncoding=utf-8
     username: root
     password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+    #初始化链接数量
+    initialSize: 5
+    #最小空闲链接数
+    minIdle: 5
+    #最大并发连接数
+    maxActive: 10
+    #获取链接等待超时的时间
+    maxWait: 60000
+    #配置间隔多久才进行一次检测,检测需要关闭的空闲链接,单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+
+
 
 mybatis-plus:
   configuration:
@@ -18,5 +31,7 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
+
+
 
 

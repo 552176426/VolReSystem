@@ -14,6 +14,9 @@ import java.util.Map;
 public interface SchoolService {
     List<School> findSchoolsOrderByXyhRank(Map<String,Object> paramsMap);
     Integer findSchoolsCount(Map<String,Object> paramsMap);
+    Map<String, Object> findOne(Integer id);
+    Map findMinScore(Map map);
+    List<Map> findSchoolScore(Map map);
 
 
 }

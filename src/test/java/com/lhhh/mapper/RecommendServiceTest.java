@@ -1,15 +1,11 @@
 package com.lhhh.mapper;
 
 import com.lhhh.service.RecommendService;
-import org.apdplat.word.WordSegmenter;
-import org.apdplat.word.segmentation.Word;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.List;
 
 /**
  * @author: lhhh
@@ -34,10 +30,6 @@ public class RecommendServiceTest {
         map.put("year",2020);
         map.put("score",600);
         recommendService.findSchools(map);*/
-
-        List<Word> wo = WordSegmenter.seg("计算机科学与技术");
-        wo.forEach(System.out::println);
-
 
     }
 

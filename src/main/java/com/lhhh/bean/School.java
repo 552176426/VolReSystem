@@ -221,6 +221,59 @@ public class School {
     private int recruitment;
     private int searchNum;
 
-
-
+    @Override
+    public String toString() {
+        return "School{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", codeEnroll='" + codeEnroll + '\'' +
+                ", belong='" + belong + '\'' +
+                ", province='" + province + '\'' +
+                ", city='" + city + '\'' +
+                ", county='" + county + '\'' +
+                ", dualClass=" + dualClass +
+                ", f985=" + f985 +
+                ", f211=" + f211 +
+                ", nature=" + nature +
+                ", type='" + type + '\'' +
+                ", viewMonth=" + viewMonth +
+                ", viewWeek=" + viewWeek +
+                ", viewTotal=" + viewTotal +
+                ", department=" + department +
+                ", central=" + central +
+                ", admissions=" + admissions +
+                ", content='" + content + '\'' +
+                ", comVote=" + comVote +
+                ", stuVote=" + stuVote +
+                ", lifeVote=" + lifeVote +
+                ", jobVote=" + jobVote +
+                ", oldName='" + oldName + '\'' +
+                ", shortName='" + shortName + '\'' +
+                ", area=" + area +
+                ", createDate=" + createDate +
+                ", phone='" + phone + '\'' +
+                ", postcode='" + postcode + '\'' +
+                ", email='" + email + '\'' +
+                ", site='" + site + '\'' +
+                ", schoolSite='" + schoolSite + '\'' +
+                ", yjszs='" + yjszs + '\'' +
+                ", numAcademician=" + numAcademician +
+                ", numDoctor=" + numDoctor +
+                ", numLab=" + numLab +
+                ", numLibrary=" + numLibrary +
+                ", numMaster=" + numMaster +
+                ", numSubject=" + numSubject +
+                ", eolRank=" + eolRank +
+                ", ruankeRank=" + ruankeRank +
+                ", wslRank=" + wslRank +
+                ", xyhRank=" + xyhRank +
+                ", qsRank=" + qsRank +
+                ", schoolType=" + schoolType +
+                ", badgeUrl='" + badgeUrl + '\'' +
+                ", dataCode='" + dataCode + '\'' +
+                ", recruitment=" + recruitment +
+                ", searchNum=" + searchNum +
+                '}';
+    }
 }

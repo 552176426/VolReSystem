@@ -193,6 +193,7 @@ public class RecommendServiceImpl implements RecommendService {
             schoolMap.put("admissionList", admissionList);
             schoolMap.put("aveMinCha", aveMinCha);
             schoolMap.put("aveScoreOrder", aveScoreOrder);
+            schoolMap.put("school_id",entry.getValue().get(0).get("id"));
             //通过线差
             if (map.get("method").equals("sort")) {
                 //冲的学校

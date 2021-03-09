@@ -2,7 +2,6 @@ package com.lhhh.data;
 
 import com.jayway.jsonpath.JsonPath;
 import com.lhhh.reptile.DownLoadMajorScoreThread;
-import com.lhhh.reptile.DownLoadSchoolScoreThread;
 import com.lhhh.utils.ReptileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +30,7 @@ import java.util.stream.Collectors;
  */
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
-public class MyTest {
+public class Baidu {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -85,7 +84,7 @@ public class MyTest {
     public void downLoadSelectData() {
         File file = new File("D:\\Downloads\\高校志愿推荐\\百度高考数据\\school_info");
         File[] files = file.listFiles();
-        for (int i = 256; i < files.length; i++) {
+        for (int i = 0; i < files.length; i++) {
             String name = files[i].getName().split(".txt")[0];
             String url = "https://gaokao.baidu.com/gaokao/gkschool/score?ajax=1&query=" + name + "&province=广东&curriculum=&batchName=";
             String content = ReptileUtils.getContent(url);
@@ -209,19 +208,82 @@ public class MyTest {
     public void downLoadSchoolScore() {
         String sql = "select * from school_score_selector";
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
-        //System.out.println(maps.size()); //285733
-        ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < 12; i++) {
-            pool.execute(new DownLoadSchoolScoreThread(i * 25000, i * 25000 + 25000, maps));
-        }
-        pool.shutdown();
+        maps.parallelStream().forEach(map->{
+            Integer id = Integer.valueOf(map.get("id").toString());
+            String schoolName = map.get("school_name").toString();
+            String provinceName = map.get("province_name").toString();
+            String curriculum = map.get("curriculum").toString();
+            String batchName = map.get("batch_name").toString();
+            String url = "https://gaokao.baidu.com/gaokao/gkschool/scoreenroll?ajax=1&query=" + schoolName + "&province=" + provinceName + "&curriculum=" + curriculum + "&batchName=" + batchName;
+            String fileName = "D:\\Downloads\\高校志愿推荐\\百度高考数据\\school_score\\" + id+".txt";
+            File file = new File(fileName);
+            if (!file.exists()){
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (file.length()==0){
+                try {
+                    String content = ReptileUtils.getContent(url);
+                    ReptileUtils.downLoad(content,fileName);
+                    System.out.println(id+" : 写入完成");
+                } catch (Exception e){
+                    try {
+                        //有问题的id
+                        FileWriter fileWriter = new FileWriter(new File("id.txt"), true);
+                        fileWriter.write(id+",");
+                        fileWriter.close();
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+            } else if (file.length()!=0){
+                System.err.println(id+"内容已存在无需写入");
+            }
+        });
+    }
 
-        while (true) {
-            if (pool.isTerminated()) {
-                long end = System.currentTimeMillis();
-                System.out.println("------------" + (end - start) + "----------------");
-                break;
+    @Test
+    public void downLoadSchoolScore1() {
+        String str = "63420,264342,108604,46784,172709,31948,140723,196267,33988,246887,216246,273983,280278,84390,9553,97993,255553,150681,259945,123950,230417,96396,30451,255242,51526,98026,76202,48732,291246,171972,37834,186838,173143,173729,100977,148812,147818,294001,69789,42450,198992,204527,137902,95123,187701,59829,107574,233282,127081,74308,288610,213949,294772,188449,98638,107766,128735,99879,151109,58820,28119,190838,149840,181492,193889,151541,241140,68864,7005,14507,53442,17776,90906,205705,103305,147610,166248,996,280268,122999,79222,266431,34223,41396,283842,83612,227204,48057,125556,130294,260917,214817,142863,9326,274500,223106,201087,48635,198903,102410,190695,231879,232454,219202,217601,6712,276081,15352,182008,3073,179385,173579,80645,115159,113522,197547,243713,252180,257354,2648,267547,261696,52621,137963,145843,21651,282571,19562,134228,164499,129549,274052,167661,259201,55441,185646,124570,247827,279372,245717,136458,160338,229641,97244,292402,172025,263250,65240,103477,173460,126703,115701,178689,142364,19819,261797,97009,198339,143887,111707,112027,279625,24960,206931,80884,64660,203905,45011,119287,139433,35917,96333,156248,95359,180526,216120,149989,135689,155888,258348,158460,142968,143085,147946,289473,87119,290724,214926,173035,49557,125978,209706,291793,258133,202398,124365,239316,291539,207566,265360,264724,250237,5156,248714,9034,293863,97478,100479,22565,186665,125830,246112,7312,11959,172768,118347,265376,21376,262719,157208,279824,48173,272537,5611,22062,227458,6329,264241,122509,133835,138131,236766,252942,17831,266841,175416,192387,33927,38849,62369,149854,138504,190865,182434,183958,196068,163972,241755,114896,53799";
+        String[] strs = str.split(",");
+        for (int i = 0; i < strs.length; i++) {
+            String sql = "select * from school_score_selector where id = "+strs[i];
+            Map<String, Object> map = jdbcTemplate.queryForMap(sql);
+            Integer id = Integer.valueOf(map.get("id").toString());
+            String schoolName = map.get("school_name").toString();
+            String provinceName = map.get("province_name").toString();
+            String curriculum = map.get("curriculum").toString();
+            String batchName = map.get("batch_name").toString();
+            String url = "https://gaokao.baidu.com/gaokao/gkschool/scoreenroll?ajax=1&query=" + schoolName + "&province=" + provinceName + "&curriculum=" + curriculum + "&batchName=" + batchName;
+            String fileName = "D:\\Downloads\\高校志愿推荐\\百度高考数据\\school_score\\" + id+".txt";
+            File file = new File(fileName);
+            if (!file.exists()){
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (file.length()==0){
+                try {
+                    String content = ReptileUtils.getContent(url);
+                    ReptileUtils.downLoad(content,fileName);
+                    System.out.println(id+" : 写入完成");
+                } catch (Exception e){
+                    try {
+                        //有问题的id
+                        FileWriter fileWriter = new FileWriter(new File("id1.txt"), true);
+                        fileWriter.write(id+",");
+                        fileWriter.close();
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+            } else if (file.length()!=0){
+                System.err.println(id+"内容已存在无需写入");
             }
         }
 
@@ -1065,19 +1127,19 @@ public class MyTest {
                         String batch_name = null;
                         switch (i) {
                             case 0:
-                                year = 2015;
-                                break;
-                            case 1:
                                 year = 2016;
                                 break;
-                            case 2:
+                            case 1:
                                 year = 2017;
                                 break;
-                            case 3:
+                            case 2:
                                 year = 2018;
                                 break;
-                            case 4:
+                            case 3:
                                 year = 2019;
+                                break;
+                            case 4:
+                                year = 2020;
                                 break;
                         }
 

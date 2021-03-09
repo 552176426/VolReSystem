@@ -34,6 +34,47 @@ public class SpecialController {
         return new Result(200, Msg.GET__SPECIAL_DATA_SUCCESS, specialListMap);
     }
 
+    @GetMapping("/findSpecialPlanCount")
+    @ResponseBody
+    public Result findSpecialPlanCount(@RequestParam Map map){
+        log.info("====>map:{}",map);
+        try {
+            Map planCount = specialService.findSpecialPlanCount(map);
+            return new Result(200,Msg.GET_SPECIAL_PLAN_COUNT_SUCCESS,planCount);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new Result(500,Msg.GET_SPECIAL_PLAN_COUNT_FAIL,null);
+        }
+    }
+
+    @GetMapping("/findSpecialPlanRecentYear")
+    @ResponseBody
+    public Result findSpecialPlanRecentYear(@RequestParam Map map){
+        log.info("====>map:{}",map);
+        try {
+            List<Map> specialPlan = specialService.findSpecialPlanRecentYear(map);
+            return new Result(200,Msg.GET_SPECIAL_PLAN_SUCCESS,specialPlan);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new Result(500,Msg.GET_SPECIAL_PLAN_FAIL,null);
+        }
+    }
+
+    @GetMapping("/findSpecialScore")
+    @ResponseBody
+    public Result findSpecialScore(@RequestParam Map map){
+        log.info("====>map:{}",map);
+        try {
+            List<Map> specialScore = specialService.findSpecialScore(map);
+            return new Result(200,Msg.GET_SPECIAL_SCORE_SUCCESS,specialScore);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new Result(500,Msg.GET_SPECIAL_SCORE_FAIL,null);
+        }
+    }
+
+
+
     @GetMapping("/findOne")
     @ResponseBody
     public Result findSpecial(@RequestParam Integer id){
@@ -49,6 +90,7 @@ public class SpecialController {
     @GetMapping("/findSchool")
     @ResponseBody
     public Result findSchool(@RequestParam Map map){
+        log.info("==============>map:{}",map);
         try {
             List<Map<String, Object>> schoolList = specialService.findSchoolBySpId(map);
             return new Result(200, Msg.GET__SPECIAL_SCHOOL_DATA_SUCCESS, schoolList);

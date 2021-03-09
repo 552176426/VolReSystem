@@ -13,4 +13,7 @@ public interface SpecialService {
     Map findSpecials();
     Map findSpecialOne(Integer id);
     List<Map<String, Object>> findSchoolBySpId(Map map);
+    Map findSpecialPlanCount(Map map);
+    List<Map> findSpecialPlanRecentYear(Map map);
+    List<Map> findSpecialScore(Map map);
 }

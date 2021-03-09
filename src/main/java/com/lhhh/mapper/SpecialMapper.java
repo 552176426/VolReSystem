@@ -47,5 +47,38 @@ public interface SpecialMapper {
     @Select("select * from special_jobdetail where special_id = #{id}")
     List<Map<String, Object>> findSpecialJobDetail(Integer id);
 
+    @Select("select year,sum(enroll_num) enroll_num  from special_plan where sps_id = (SELECT id FROM `special_plan_selector` where school_name=#{schoolName} and province_name=#{provinceName} and curriculum=#{curriculum} ORDER BY year desc LIMIT 1\n" +
+            ") and batch_name=#{batchName} GROUP BY year")
+    Map findSpecialPlanCount(Map map);
+
+    @Select("select major_name,enroll_num from special_plan where sps_id = (SELECT id FROM `special_plan_selector` where school_name=#{schoolName} and province_name=#{provinceName} and curriculum=#{curriculum} ORDER BY year desc LIMIT 1\n" +
+            ") and batch_name=#{batchName}")
+    List<Map> findSpecialPlanRecentYear(Map map);
+
+    @Select("SELECT * from school_special_score where sms_id = (select id from school_special_score_selector where school_name=#{schoolName} and province_name=#{provinceName} and curriculum=#{curriculum} and year=#{year}) and batch_name=#{batchName}")
+    List<Map> findSpecialScore(Map map);
+
+    @Select("select special_id,name,salary from special where salary is not null ORDER BY salary desc,special_id")
+    List<Map> findSpecialRankBySalary();
+
+    @Select("select special_id,name,salary from special where salary is not null and level1 =#{level1} ORDER BY salary desc,special_id")
+    List<Map> findSpecialRankBySalaryAndLevel1(String level1);
+
+    @Select("select special_id,name,view_week from special ORDER BY view_week desc,special_id")
+    List<Map> findSpecialRankByViewWeek();
+
+    @Select("select special_id,name,view_total from special where salary is not null and level1 =#{level1}\n" +
+            "ORDER BY view_total desc,special_id")
+    List<Map> findSpecialRankByViewTotalAndLevel1(String level1);
+    @Select("select special_id,name,view_month from special where salary is not null and level1 =#{level1}\n" +
+            "ORDER BY view_month desc,special_id")
+    List<Map> findSpecialRankByViewMonthAndLevel1(String level1);
+    @Select("select special_id,name,view_week from special where salary is not null and level1 =#{level1}\n" +
+            "ORDER BY view_week desc,special_id")
+    List<Map> findSpecialRankByViewWeekAndLevel1(String level1);
+
+
+
+
 
 }

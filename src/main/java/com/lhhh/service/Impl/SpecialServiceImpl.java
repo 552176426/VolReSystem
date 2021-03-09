@@ -75,13 +75,13 @@ public class SpecialServiceImpl implements SpecialService {
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> special = specialMapper.findSpecialById(id);
 
-        if (StringUtils.isEmpty(special.get("sel_adv"))){
+        if (StringUtils.isEmpty(special.get("sel_adv"))) {
             special.put("sel_dev", "不限");
         }
 
         //男女比例
-        if(StringUtils.isEmpty(special.get("rate"))){
-            special.put("rate"," ");
+        if (StringUtils.isEmpty(special.get("rate"))) {
+            special.put("rate", " ");
         } else {
             String rate = special.get("rate").toString();
             System.out.println(rate);
@@ -95,7 +95,7 @@ public class SpecialServiceImpl implements SpecialService {
 
         //就业率
         List<Map<String, Object>> specialJobRate = specialMapper.findSpecialJobRate(id);
-        if (specialJobRate.size()!=0){
+        if (specialJobRate.size() != 0) {
             Map<String, Object> map = specialJobRate.get(specialJobRate.size() - 1);
             String jobrate = map.get("rate").toString();
             String jobrate_1 = jobrate.split("-")[0];
@@ -112,9 +112,9 @@ public class SpecialServiceImpl implements SpecialService {
 
         //专业排名
         Integer salaryRank = specialMapper.findSpecialSalaryRank(id);
-        if (StringUtils.isEmpty(salaryRank)){
+        if (StringUtils.isEmpty(salaryRank)) {
             special.put("salaryRank", "--");
-        }else {
+        } else {
             special.put("salaryRank", salaryRank);
         }
 
@@ -125,7 +125,7 @@ public class SpecialServiceImpl implements SpecialService {
         result.put("similarSpecial", similarSpecial);
 
         //课程
-        if (!StringUtils.isEmpty(special.get("learn_what"))){
+        if (!StringUtils.isEmpty(special.get("learn_what"))) {
             String content = special.get("learn_what").toString();
             Pattern pattern = Pattern.compile("《(.*?)》");
             Matcher matcher = pattern.matcher(content);
@@ -143,9 +143,9 @@ public class SpecialServiceImpl implements SpecialService {
         result.put("baseInfo", special);
 
         List<Map<String, Object>> specialImpress = specialMapper.findSpecialImpress(id);
-        if (specialImpress.size()!=0){
+        if (specialImpress.size() != 0) {
             result.put("impress", specialImpress);
-        }else {
+        } else {
             result.put("impress", null);
         }
 
@@ -164,15 +164,17 @@ public class SpecialServiceImpl implements SpecialService {
                 String rStr = String.format("%.1f", r);
                 i.put("rate", rStr);
                 return i;
-            }).sorted(Comparator.comparing((Map<String, Object> h) -> (Double.parseDouble( h.get("rate").toString()))).reversed())
+            }).sorted(Comparator.comparing((Map<String, Object> h) -> (Double.parseDouble(h.get("rate").toString()))).reversed())
                     .collect(Collectors.toList());
             jobDetailMap.put("type1", type1);
-        } else if (type.get(2) != null) {
+        }
+        if (type.get(2) != null) {
             List<Map<String, Object>> type2 = type.get(2).stream()
                     .sorted(Comparator.comparing((Map<String, Object> h) -> ((Double) h.get("rate"))).reversed())
                     .collect(Collectors.toList());
             jobDetailMap.put("type2", type2);
-        } else if (type.get(3) != null) {
+        }
+        if (type.get(3) != null) {
             List<Map<String, Object>> type3 = type.get(3).stream()
                     .sorted(Comparator.comparing((Map<String, Object> h) -> ((Double) h.get("rate"))).reversed())
                     .collect(Collectors.toList());
@@ -185,11 +187,27 @@ public class SpecialServiceImpl implements SpecialService {
 
     @Override
     public List<Map<String, Object>> findSchoolBySpId(Map map) {
+
         int page = Integer.parseInt(map.get("page").toString());
         int pageCount = Integer.parseInt(map.get("pageCount").toString());
         PageHelper.startPage(page, pageCount);
         return specialMapper.findSchoolBySpId(Integer.parseInt(map.get("id").toString()));
 
+    }
+
+    @Override
+    public Map findSpecialPlanCount(Map map) {
+        return specialMapper.findSpecialPlanCount(map);
+    }
+
+    @Override
+    public List<Map> findSpecialPlanRecentYear(Map map) {
+        return specialMapper.findSpecialPlanRecentYear(map);
+    }
+
+    @Override
+    public List<Map> findSpecialScore(Map map) {
+        return specialMapper.findSpecialScore(map);
     }
 
 
